@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="界面1" />
+
+    <Button
+        android:id="@+id/btn_aidl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="44dp"
+        android:layout_marginTop="40dp"
+        android:text="AIDL" />
+
+    <Button
+        android:id="@+id/btn_add_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/btn_aidl"
+        android:layout_toRightOf="@id/btn_aidl"
+        android:text="add Book" />
+
+    <Button
+        android:id="@+id/btn_get_all_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/btn_add_book"
+        android:layout_toRightOf="@id/btn_add_book"
+        android:text="getALLBook" />
+
+    <Button
+        android:id="@+id/btn_messenger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/btn_aidl"
+        android:layout_below="@id/btn_aidl"
+        android:layout_marginTop="10dp"
+        android:text="messenger" />
+
+</RelativeLayout>
