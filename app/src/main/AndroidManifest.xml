@@ -18,7 +18,12 @@
         </activity>
         <activity android:name=".Activity2" />
 
-        <service android:name=".service.AIDLService" />
+        <service
+            android:name=".service.AIDLService"
+            android:process=":aidl" />
+        <service
+            android:name=".service.MessengerService"
+            android:process=":messenger" />
     </application>
 
 </manifest>

@@ -13,12 +13,11 @@
         android:id="@+id/btn_aidl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="44dp"
         android:layout_marginTop="40dp"
         android:text="AIDL" />
 
     <Button
-        android:id="@+id/btn_add_book"
+        android:id="@+id/btn_aidl_add_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/btn_aidl"
@@ -26,11 +25,11 @@
         android:text="add Book" />
 
     <Button
-        android:id="@+id/btn_get_all_book"
+        android:id="@+id/btn_aidl_get_all_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/btn_add_book"
-        android:layout_toRightOf="@id/btn_add_book"
+        android:layout_alignTop="@id/btn_aidl_add_book"
+        android:layout_toRightOf="@id/btn_aidl_add_book"
         android:text="getALLBook" />
 
     <Button
@@ -41,5 +40,24 @@
         android:layout_below="@id/btn_aidl"
         android:layout_marginTop="10dp"
         android:text="messenger" />
+
+    <Button
+        android:id="@+id/btn_messenger_add_student"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_aidl"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/btn_messenger"
+        android:text="Add Student" />
+
+    <Button
+        android:id="@+id/btn_messenger_get_all_student"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_aidl"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/btn_messenger_add_student"
+        android:text="get All Student" />
+
 
 </RelativeLayout>

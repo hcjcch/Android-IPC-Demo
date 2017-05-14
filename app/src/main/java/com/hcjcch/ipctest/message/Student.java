@@ -5,19 +5,25 @@ import android.os.Parcelable;
 
 /**
  * <p> 多进程通信的实体类 Student ，为 Messenger 通信方式使用
- *
+ * <p>
  * Created by hcjcch on 2017/5/14.
  */
 
 public class Student implements Parcelable {
     private String name;
+    private int id;
 
-    public Student(String name) {
+    public Student() {
+    }
+
+    public Student(String name, int id) {
         this.name = name;
+        this.id = id;
     }
 
     protected Student(Parcel in) {
         name = in.readString();
+        id = in.readInt();
     }
 
     public static final Creator<Student> CREATOR = new Creator<Student>() {
@@ -32,14 +38,6 @@ public class Student implements Parcelable {
         }
     };
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -48,5 +46,14 @@ public class Student implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
+        dest.writeInt(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

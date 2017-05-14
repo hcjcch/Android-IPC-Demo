@@ -3,7 +3,10 @@ package com.hcjcch.ipctest;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,13 +16,19 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.hcjcch.ipctest.message.Book;
+import com.hcjcch.ipctest.message.Student;
 import com.hcjcch.ipctest.service.AIDLService;
+import com.hcjcch.ipctest.service.MessengerService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static com.hcjcch.ipctest.service.MessengerService.INTENT_KEY_STUDENTS;
+import static com.hcjcch.ipctest.service.MessengerService.MSG_GET_STUDENTS;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,18 +38,54 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.btn_messenger)
     Button btnMessenger;
 
-    @Bind(R.id.btn_add_book)
-    Button btnAddBook;
+    @Bind(R.id.btn_aidl_add_book)
+    Button btnAidlAddBook;
 
-    @Bind(R.id.btn_get_all_book)
-    Button btnGetAllBook;
+    @Bind(R.id.btn_aidl_get_all_book)
+    Button btnAidlGetAllBook;
+
+    @Bind(R.id.btn_messenger_add_student)
+    Button btnMessengerAddStudent;
+
+    @Bind(R.id.btn_messenger_get_all_student)
+    Button btnMessengerGetAllStudent;
 
     private IBookManager iBookManager;
+    private Messenger serviceMessenger;
+
+    private Handler clientMessengerHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_GET_STUDENTS:
+                    msg.getData().setClassLoader(Student.class.getClassLoader());
+                    ArrayList<Student> students = msg.getData().getParcelableArrayList(INTENT_KEY_STUDENTS);
+                    Log.d(AIDLService.TAG, students.toString());
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    };
+
+    private Messenger clientMessenger = new Messenger(clientMessengerHandler);
 
     private ServiceConnection aidlServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             iBookManager = IBookManager.Stub.asInterface(service);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    private ServiceConnection messengerConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            serviceMessenger = new Messenger(service);
         }
 
         @Override
@@ -66,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 bindService(intent, aidlServiceConnection, BIND_AUTO_CREATE);
             }
         });
-        btnAddBook.setOnClickListener(new View.OnClickListener() {
+        btnAidlAddBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (iBookManager == null) {
@@ -81,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        btnGetAllBook.setOnClickListener(new View.OnClickListener() {
+        btnAidlGetAllBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (iBookManager == null) {
@@ -100,7 +145,37 @@ public class MainActivity extends AppCompatActivity {
         btnMessenger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MessengerService.class);
+                bindService(intent, messengerConnection, BIND_AUTO_CREATE);
+            }
+        });
 
+        btnMessengerAddStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Message message = Message.obtain(null, MessengerService.MSG_ADD_STUDENT);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(MessengerService.INTENT_KEY_STUDENT, new Student("huangchen", 1));
+                message.setData(bundle);
+                message.replyTo = clientMessenger;
+                try {
+                    serviceMessenger.send(message);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        btnMessengerGetAllStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Message message = Message.obtain(null, MSG_GET_STUDENTS);
+                message.replyTo = clientMessenger;
+                try {
+                    serviceMessenger.send(message);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
