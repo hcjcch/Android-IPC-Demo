@@ -11,7 +11,6 @@ import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.hcjcch.ipctest.message.Book;
 import com.hcjcch.ipctest.message.Student;
 
 import java.util.ArrayList;
