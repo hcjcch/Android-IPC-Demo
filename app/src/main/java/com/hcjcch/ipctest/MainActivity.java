@@ -52,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
 
     private IBookManager iBookManager;
     private Messenger serviceMessenger;
+    private IOnNewBookArrivedListener iOnNewBookArrivedListener = new IOnNewBookArrivedListener.Stub() {
+        @Override
+        public void onNewBookArrived(Book newBook) throws RemoteException {
+            Log.d(AIDLService.TAG, Thread.currentThread().getName() + "  new Book : " + newBook);
+        }
+    };
 
     private Handler clientMessengerHandler = new Handler() {
         @Override
@@ -60,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 case MSG_GET_STUDENTS:
                     msg.getData().setClassLoader(Student.class.getClassLoader());
                     ArrayList<Student> students = msg.getData().getParcelableArrayList(INTENT_KEY_STUDENTS);
+                    assert students != null;
                     Log.d(AIDLService.TAG, students.toString());
                     break;
                 default:
@@ -73,7 +80,13 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection aidlServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d(AIDLService.TAG, Thread.currentThread().getName());
             iBookManager = IBookManager.Stub.asInterface(service);
+            try {
+                iBookManager.registerListener(iOnNewBookArrivedListener);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -101,6 +114,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initListener();
+    }
+
+    @Override
+    protected void onStop() {
+        try {
+            iBookManager.unRegisterListener(iOnNewBookArrivedListener);
+            unbindService(aidlServiceConnection);
+            unbindService(messengerConnection);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onStop();
     }
 
     private void initListener() {
