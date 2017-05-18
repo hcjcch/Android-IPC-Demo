@@ -59,5 +59,12 @@
         android:layout_toRightOf="@id/btn_messenger_add_student"
         android:text="get All Student" />
 
+    <Button
+        android:id="@+id/btn_provider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_messenger"
+        android:text="Provider" />
+
 
 </RelativeLayout>

@@ -3,13 +3,15 @@ package com.hcjcch.ipctest;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.hcjcch.ipctest.message.Book;
 import com.hcjcch.ipctest.message.Student;
+import com.hcjcch.ipctest.provider.BookProvider;
 import com.hcjcch.ipctest.service.AIDLService;
 import com.hcjcch.ipctest.service.MessengerService;
 
@@ -49,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.btn_messenger_get_all_student)
     Button btnMessengerGetAllStudent;
+
+    @Bind(R.id.btn_provider)
+    Button btnProvider;
 
     private IBookManager iBookManager;
     private Messenger serviceMessenger;
@@ -200,6 +206,27 @@ public class MainActivity extends AppCompatActivity {
                     serviceMessenger.send(message);
                 } catch (RemoteException e) {
                     e.printStackTrace();
+                }
+            }
+        });
+        btnProvider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cursor cursor = getContentResolver().query(Uri.parse("content://com.hcjcch.ipctest.bookprovider/book"),
+                        null, null, null, null);
+                if (cursor != null) {
+                    cursor.moveToFirst();
+                    int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                    String name = cursor.getString(cursor.getColumnIndex("name"));
+                    Book book = new Book(id, name);
+                    Log.d(BookProvider.TAG, book.toString());
+                }
+                Log.d(BookProvider.TAG, "cursor is null" + (cursor == null));
+                try {
+                    if (cursor != null) {
+                        cursor.close();
+                    }
+                } catch (Exception ignore) {
                 }
             }
         });

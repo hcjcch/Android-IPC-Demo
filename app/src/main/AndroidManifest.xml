@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hcjcch.ipctest">
 
+    <permission
+        android:name="com.hcjcch.ipctest.AIDL"
+        android:label="@string/app_name"
+        android:permissionGroup="@string/app_name"
+        android:protectionLevel="normal" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,10 +25,16 @@
 
         <service
             android:name=".service.AIDLService"
+            android:permission="com.hcjcch.ipctest.AIDL"
             android:process=":aidl" />
         <service
             android:name=".service.MessengerService"
             android:process=":messenger" />
+
+        <provider
+            android:name=".provider.BookProvider"
+            android:authorities="com.hcjcch.ipctest.bookprovider"
+            android:process=":provider"/>
     </application>
 
 </manifest>
