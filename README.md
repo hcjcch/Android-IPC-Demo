@@ -1,2 +1,5 @@
 # Android-IPC-Demo
-Android各种IPC通信方式
+## Android各种IPC通信方式
+* AIDL
+* Messenger
+
