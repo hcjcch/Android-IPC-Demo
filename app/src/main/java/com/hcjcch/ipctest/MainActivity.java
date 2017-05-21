@@ -228,6 +228,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } catch (Exception ignore) {
                 }
+                Bundle bundle = getContentResolver().call(Uri.parse("content://com.hcjcch.ipctest.bookprovider/book"), "method", "parameter", null);
+                assert bundle != null;
+                Log.d(BookProvider.TAG, bundle.getString("callArg"));
             }
         });
     }
