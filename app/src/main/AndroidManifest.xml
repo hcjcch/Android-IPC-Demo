@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hcjcch.ipctest">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <permission
         android:name="com.hcjcch.ipctest.AIDL"
         android:label="@string/app_name"
@@ -13,6 +15,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".IpcApplication"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -25,7 +28,6 @@
 
         <service
             android:name=".service.AIDLService"
-            android:permission="com.hcjcch.ipctest.AIDL"
             android:process=":aidl" />
         <service
             android:name=".service.MessengerService"
@@ -35,6 +37,9 @@
             android:name=".provider.BookProvider"
             android:authorities="com.hcjcch.ipctest.bookprovider"
             android:process=":provider"/>
+        <service
+            android:name=".service.SocketService"
+            android:process=":socket" />
     </application>
 
 </manifest>

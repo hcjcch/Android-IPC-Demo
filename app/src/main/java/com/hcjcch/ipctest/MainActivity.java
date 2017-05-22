@@ -29,6 +29,13 @@ import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.hcjcch.ipctest.service.MessengerService.INTENT_KEY_STUDENTS;
 import static com.hcjcch.ipctest.service.MessengerService.MSG_GET_STUDENTS;
@@ -56,7 +63,14 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.btn_provider)
     Button btnProvider;
 
+    @Bind(R.id.btn_socket_ipc)
+    Button btnSocketIpc;
+
+    @Bind(R.id.btn_network_binder)
+    Button btnNetworkBinder;
+
     private IBookManager iBookManager;
+    private INetwork iNetwork;
     private Messenger serviceMessenger;
     private IOnNewBookArrivedListener iOnNewBookArrivedListener = new IOnNewBookArrivedListener.Stub() {
         @Override
@@ -83,24 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Messenger clientMessenger = new Messenger(clientMessengerHandler);
 
-    private ServiceConnection aidlServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(AIDLService.TAG, Thread.currentThread().getName());
-            iBookManager = IBookManager.Stub.asInterface(service);
-            try {
-                iBookManager.registerListener(iOnNewBookArrivedListener);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
-
     private ServiceConnection messengerConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -126,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         try {
             iBookManager.unRegisterListener(iOnNewBookArrivedListener);
-            unbindService(aidlServiceConnection);
             unbindService(messengerConnection);
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,8 +133,18 @@ public class MainActivity extends AppCompatActivity {
         buttonAidl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AIDLService.class);
-                bindService(intent, aidlServiceConnection, BIND_AUTO_CREATE);
+                Observable.create(new ObservableOnSubscribe<Integer>() {
+                    @Override
+                    public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
+                        iBookManager = IBookManager.Stub.asInterface(
+                                BinderPoolManager.getInstance(MainActivity.this).queryBinder(BinderPoolManager.BINDER_BOOK));
+                        try {
+                            iBookManager.registerListener(iOnNewBookArrivedListener);
+                        } catch (RemoteException exception) {
+                            exception.printStackTrace();
+                        }
+                    }
+                }).subscribeOn(Schedulers.io()).subscribe();
             }
         });
         btnAidlAddBook.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +177,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+        btnNetworkBinder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Flowable.just(1).map(new Function<Integer, Boolean>() {
+                    @Override
+                    public Boolean apply(@NonNull Integer integer) throws Exception {
+                        iNetwork = INetwork.Stub.asInterface(BinderPoolManager.getInstance(MainActivity.this)
+                                .queryBinder(BinderPoolManager.BINDER_NETWORK));
+                        iNetwork.connectNetwork();
+                        return true;
+                    }
+                }).subscribeOn(Schedulers.io()).subscribe();
+            }
+        });
         btnMessenger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
