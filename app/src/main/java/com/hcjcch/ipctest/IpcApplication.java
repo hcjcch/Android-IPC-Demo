@@ -48,6 +48,9 @@ public class IpcApplication extends Application {
         }
     }
 
+    /**
+     * 判断是否是默认进程（默认进程名是包名）
+     */
     public static boolean isMainProcess(Context context) {
         String processName = getProcessName();
         return processName == null || processName.equals(context.getPackageName());
