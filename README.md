@@ -15,7 +15,21 @@
     android:process="xxx"
     
 ``` 
+":xx"方式开启的进程是私有进程，只能本应用的组件可以共同运行在这个进程中。其他应用的组件无法运行在这个进程中，因为它们根本无法访问到这个进程
 
+"xx"这种方式开启的进程全局进程，其他应用可以通过shareUID的方式运行的这一个进程中。并且这些共用shareUID的应用签名必须一致
+
+##### 多进程的问题
+* 静态成员和单例模式完全失效
+* 线程同步机制完全失效
+* SharePreferences 的可靠性下降
+* Application 会多次创建
+
+运行在同一个进程中的组建属于同一个虚拟机和同一个Application
+
+## 其他知识
+
+*[序列化](./Serialization.md)
 
 ## Android各种IPC通信方式
 * [Intent](./Intent.md)
