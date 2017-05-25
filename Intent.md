@@ -1,3 +1,4 @@
-## 显式Intent
-
-## 隐式Intent
+## Bundle
+Android中四大组件间的通信都可以通过Intent传递，而Intent中可以传递一个Bundle对象，这个Bundle实现了Parcelable接口，所以它可以方便地在不同的进程间传递。
+#### 缺点
+Bundle传递的数据格式有限，只能传递基本类型，实现了Parcelable接口和Serializable接口的对象以及Android支持的一些特殊对象。Bundle不支持的类型无法传递。

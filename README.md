@@ -32,8 +32,9 @@
 *[序列化](./Serialization.md)
 
 ## Android各种IPC通信方式
-* [Intent](./Intent.md)
-* AIDL
+* [Bundle](./Intent.md)
+* [AIDL](./AIDL.md)
+* [File Share](FILE_SHARE.md)
 * Messenger
 * ContentProvider
 * Socket
