@@ -69,6 +69,12 @@ public class MessengerService extends Service {
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList(INTENT_KEY_STUDENTS, students);
                         message.setData(bundle);
+                        Log.d(TAG, "messenger thread" + Thread.currentThread().getName());
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         msg.replyTo.send(message);
                     } catch (RemoteException e) {
                         e.printStackTrace();

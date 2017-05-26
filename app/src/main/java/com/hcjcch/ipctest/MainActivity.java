@@ -225,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+                Log.d(BookProvider.TAG, "Messenger send for reply");
             }
         });
         btnProvider.setOnClickListener(new View.OnClickListener() {

@@ -35,6 +35,6 @@
 * [Bundle](./Intent.md)
 * [AIDL](./AIDL.md)
 * [File Share](FILE_SHARE.md)
-* Messenger
+* [Messenger](MESSENGER.md)
 * ContentProvider
 * Socket
