@@ -29,7 +29,7 @@
 
 ## 其他知识
 
-*[序列化](./Serialization.md)
+* [序列化](./Serialization.md)
 
 ## Android各种IPC通信方式
 * [Bundle](./Intent.md)
