@@ -26,7 +26,7 @@ public class MessengerService extends Service {
     }
 
     /**
-    * 返回回Messenger中从的IBinder 
+    * 返回Messenger中的IBinder 
     */
     @Nullable
     @Override
@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 ### 源码解析
+Messenger底层是基于AIDL的
 ### 参考文章
 * [http://blog.csdn.net/yanbober/article/details/48373341](http://blog.csdn.net/yanbober/article/details/48373341)
 * [https://www.diycode.cc/topics/361](https://www.diycode.cc/topics/361)
